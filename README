@@ -1,0 +1,35 @@
+Vienna url:
+
+http://openls.geog.uni-heidelberg.de/testing2015/route?Start=8.6817521,49.4173462&End=8.6828883,49.4067577&Via=&lang=de&distunit=KM&routepref=Fastest&avoidAreas=&useTMC=false&noMotorways=false&noTollways=false&instructions=false
+
+http://wiki.openstreetmap.org/wiki/OpenRouteService
+
+cat input/cities.txt | xargs -n 2 -I {} python scripts/geocode.py -d geocodes "{}"
+
+#### Create the grid
+
+resolution=300; python scripts/create_grid_skeleton.py -r ${resolution} --min-x -12.4 --max-x 46.3 --min-y 33.1 --max-y 74.5 > grid_skeletons/grid_${resolution}.ssv
+
+#### Query the routing server
+
+for city in $(cat ~/projects/oebb/cities.txt); do parallel -q --colsep ' ' node scripts/get_directions.js -c --output-dir directions/${city} \"{4}\" \"{5}\" \"{6}\" \"{7}\" :::: geocodes/${city} :::: grid_skeletons/grid_300.ssv; done;
+
+city=vienna; node scripts/get_directions.js -c --output-dir directions/${city} \"-0.686646\" \"45.752193\" \"-0.32959\" \"46.229253\"
+
+#### Consolidate the connections
+
+parallel 'find directions/{}/ -type f  > file_lists/file_list_{}.txt; python scripts/parse_directions.py -l file_lists/file_list_{}.txt > all_connections/all_connections_{}.json' ::: vienna
+
+#### Create the grid
+
+ln -s ~/projects/oebb/scripts/create_grid.py scripts/
+method=time; walkspeed=5; resolution=300; parallel /usr/bin/time python scripts/create_grid.py all_connections/all_connections_{}.json -r ${resolution} --min-x -12.4 --max-x 46.3 --min-y 33.1 --max-y 74.5 --method ${method} --walking-speed ${walkspeed} {} '>' grids/grid_${method}_{}_${resolution}_${walkspeed}.json ::: podgorica dublin
+
+#### Create the contours
+
+ln -s ~/projects/oebb/python_contours/scripts/grid_to_contours.py scripts/
+resolution=300; parallel python scripts/grid_to_contours.py grids/grid_time_{}_${resolution}_5.json  '>' contours/{}.json ::: vienna
+
+### Copy the contours to the emptypipes web site
+
+cp contours/* ~/projects/emptypipes/jsons/isochrone_driving_contours/
