@@ -1,11 +1,12 @@
 #!/usr/bin/python
 
+import gzip
 import json
 import sys
 from optparse import OptionParser
 
 def parse_distances(filename):
-    with open(filename, 'r') as f:
+    with gzip.open(filename, 'r') as f:
         try:
             data = json.loads(f.read())
         except Exception as e:

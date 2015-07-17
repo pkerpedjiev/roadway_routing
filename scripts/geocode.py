@@ -40,7 +40,7 @@ def main():
 
         if location is not None:
             with open(op.join(options.directory, args[0].split(',')[0].lower()), 'w') as f:
-                out_str = "{} {} {} {}".format(args[0].split(',')[0].lower(), args[0].split(',')[1], location.longitude, location.latitude)
+                out_str = "{} {} {} {}".format(args[0].split(',')[0].lower().strip().replace(' ', '_').replace("'", "_"), args[0].split(',')[1].strip().replace(" ","_"), location.longitude, location.latitude)
                 f.write(out_str)
 
         print "finished:", args

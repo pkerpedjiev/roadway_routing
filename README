@@ -5,30 +5,72 @@ http://openls.geog.uni-heidelberg.de/testing2015/route?Start=8.6817521,49.417346
 http://wiki.openstreetmap.org/wiki/OpenRouteService
 
 cat input/cities.txt | xargs -n 2 -I {} python scripts/geocode.py -d geocodes "{}"
+cat input/cities_us.txt | xargs -n 2 -I {} python scripts/geocode.py -d geocodes_us "{}"
+cat input/cities_sa.txt | xargs -n 2 -I {} python scripts/geocode.py -d geocodes_sa "{}"
+cat input/cities_africa.txt | xargs -n 2 -I {} python scripts/geocode.py -d geocodes_africa "{}"
+
+mv geocodes_us/new\ york geocodes_us/new_york
+mv geocodes_us/los\ angeles geocodes_us/los_angeles
+mv geocodes_us/san\ diego geocodes_us/san_diego
+mv geocodes_us/san\ francisco geocodes_us/san_francisco
+
+mv geocodes_sa/buenos\ aires geocodes_sa/buenos_aires
+mv geocodes_sa/rio\ de\ janeiro geocodes_sa/rio_de_janeiro
+mv geocodes_sa/sao\ paolo geocodes_sa/sao_paolo
+mv geocodes_sa/la\ paz geocodes_sa/la_paz
+
+mv geocodes_africa/n\'djamena geocodes_africa/n_djamena
+mv geocodes_africa/dar\ es\ salaam geocodes_africa/dar_es_salaam
+mv geocodes_africa/porto\ novo geocodes_africa/porto_novo
+mv geocodes_africa/cape\ town geocodes_africa/cape_town
+
+ls geocodes_sa/ > cities_sa.txt
+ls geocodes_africa/ > cities_africa.txt
 
 #### Create the grid
 
-resolution=300; python scripts/create_grid_skeleton.py -r ${resolution} --min-x -12.4 --max-x 46.3 --min-y 33.1 --max-y 74.5 > grid_skeletons/grid_${resolution}.ssv
+resolution=600; for city in $(cat cities_sa.txt); do parallel -q --colsep ' ' python  scripts/create_grid_skeleton.py -r ${resolution} --center-x {3} --center-y {4} > grid_skeletons/grid_${city}_${resolution}.ssv :::: geocodes_sa/${city}; done;
+resolution=600; for city in $(cat cities_africa.txt); do parallel -q --colsep ' ' python  scripts/create_grid_skeleton.py -r ${resolution} --center-x {3} --center-y {4} > grid_skeletons/grid_${city}_${resolution}.ssv :::: geocodes_africa/${city}; done;
+
+resolution=400; for city in $(cat cities_africa.txt); do parallel -q --colsep ' ' python  scripts/create_grid_skeleton.py -r ${resolution} --center-x {3} --center-y {4} > grid_skeletons/grid_${city}_${resolution}.ssv :::: geocodes_africa/${city}; done;
+
+#resolution=300; python scripts/create_grid_skeleton.py -r ${resolution} --min-x -12.4 --max-x 46.3 --min-y 33.1 --max-y 74.5 > grid_skeletons/grid_${resolution}.ssv
+#resolution=300; python scripts/create_grid_skeleton.py -r ${resolution} --min-x -12.4 --max-x 46.3 --min-y 33.1 --max-y 74.5 > grid_skeletons/grid_${resolution}.ssv
+#resolution=300; python scripts/create_grid_skeleton.py -r ${resolution} --min-x -135.14 --max-x -63.9 --min-y 21.9 --max-y 62.2 > grid_skeletons_us/grid_${resolution}.ssv
+#resolution=300; python scripts/create_grid_skeleton.py -r ${resolution} --min-x -81 --max-x -34 --min-y -55 --max-y 12 > grid_skeletons_sa/grid_${resolution}.ssv
 
 #### Query the routing server
 
-for city in $(cat ~/projects/oebb/cities.txt); do parallel -q --colsep ' ' node scripts/get_directions.js -c --output-dir directions/${city} \"{4}\" \"{5}\" \"{6}\" \"{7}\" :::: geocodes/${city} :::: grid_skeletons/grid_300.ssv; done;
+for city in $(cat cities_sa.txt); do parallel -q --colsep ' ' node scripts/get_directions.js -c --output-dir directions_sa/${city} \"{3}\" \"{4}\" \"{5}\" \"{6}\" :::: geocodes_sa/${city} :::: grid_skeletons/grid_${city}_400.ssv; find directions_sa/${city} -name "*.json" | xargs -n 1 gzip; done;
+
+#for city in $(cat ~/projects/oebb/cities.txt); do parallel -q --colsep ' ' node scripts/get_directions.js -c --output-dir directions/${city} \"{4}\" \"{5}\" \"{6}\" \"{7}\" :::: geocodes/${city} :::: grid_skeletons/grid_300.ssv; find directions/${city} -name "*.json" | xargs -n 1 gzip; done;
+
+for city in $(cat ~/projects/oebb/cities_us.txt); do parallel -q --colsep ' ' node scripts/get_directions.js -c --output-dir directions_us/${city} \"{4}\" \"{5}\" \"{6}\" \"{7}\" :::: geocodes_us/${city} :::: grid_skeletons_us/grid_300.ssv; find directions_us/${city} -name "*.json" | xargs -n 1 gzip; done;
+
+for city in $(cat cities_sa.txt); do parallel -q --colsep ' ' node scripts/get_directions.js -c --output-dir directions_sa/${city} \"{4}\" \"{5}\" \"{6}\" \"{7}\" :::: geocodes_sa/${city} :::: grid_skeletons_sa/grid_300.ssv; find directions_sa/${city} -name "*.json" | xargs -n 1 gzip; done;
 
 city=vienna; node scripts/get_directions.js -c --output-dir directions/${city} \"-0.686646\" \"45.752193\" \"-0.32959\" \"46.229253\"
 
 #### Consolidate the connections
 
-parallel 'find directions/{}/ -type f  > file_lists/file_list_{}.txt; python scripts/parse_directions.py -l file_lists/file_list_{}.txt > all_connections/all_connections_{}.json' ::: vienna
+parallel 'find directions_sa/{}/ -type f  > file_lists/file_list_{}.txt; python scripts/parse_directions.py -l file_lists/file_list_{}.txt > all_connections/all_connections_{}.json' ::: $(cat cities_sa.txt)
+
+parallel 'find directions/{}/ -type f  > file_lists/file_list_{}.txt; python scripts/parse_directions.py -l file_lists/file_list_{}.txt > all_connections/all_connections_{}.json' ::: $(cat ~/projects/oebb/cities.txt )
+parallel 'find directions_us/{}/ -type f  > file_lists/file_list_{}.txt; python scripts/parse_directions.py -l file_lists/file_list_{}.txt > all_connections/all_connections_{}.json' ::: $(cat ~/projects/oebb/cities_us.txt )
 
 #### Create the grid
 
 ln -s ~/projects/oebb/scripts/create_grid.py scripts/
-method=time; walkspeed=5; resolution=300; parallel /usr/bin/time python scripts/create_grid.py all_connections/all_connections_{}.json -r ${resolution} --min-x -12.4 --max-x 46.3 --min-y 33.1 --max-y 74.5 --method ${method} --walking-speed ${walkspeed} {} '>' grids/grid_${method}_{}_${resolution}_${walkspeed}.json ::: podgorica dublin
+method=time; walkspeed=5; resolution=300; parallel /usr/bin/time python scripts/create_grid.py all_connections/all_connections_{}.json -r ${resolution} --method ${method} --walking-speed ${walkspeed} {} '>' grids/grid_${method}_{}_${resolution}_${walkspeed}.json ::: la_paz
+
+method=time; walkspeed=5; resolution=300; parallel /usr/bin/time python scripts/create_grid.py all_connections/all_connections_{}.json -r ${resolution} --min-x -12.4 --max-x 46.3 --min-y 33.1 --max-y 74.5 --method ${method} --walking-speed ${walkspeed} {} '>' grids/grid_${method}_{}_${resolution}_${walkspeed}.json ::: $(cat ~/projects/oebb/cities.txt)
+method=time; walkspeed=5; resolution=300; parallel /usr/bin/time python scripts/create_grid.py all_connections/all_connections_{}.json -r ${resolution} --min-x -135.14 --max-x -63.9 --min-y 21.9 --max-y 62.2 --method ${method} --walking-speed ${walkspeed} {} '>' grids/grid_${method}_{}_${resolution}_${walkspeed}.json ::: $(cat ~/projects/oebb/cities_us.txt)
 
 #### Create the contours
 
 ln -s ~/projects/oebb/python_contours/scripts/grid_to_contours.py scripts/
-resolution=300; parallel python scripts/grid_to_contours.py grids/grid_time_{}_${resolution}_5.json  '>' contours/{}.json ::: vienna
+resolution=300; parallel python scripts/grid_to_contours.py grids/grid_time_{}_${resolution}_5.json  '>' contours/{}.json ::: $(cat ~/projects/oebb/cities.txt)
+resolution=300; parallel python scripts/grid_to_contours.py grids/grid_time_{}_${resolution}_5.json  '>' contours/{}.json ::: $(cat ~/projects/oebb/cities_us.txt)
 
 ### Copy the contours to the emptypipes web site
 

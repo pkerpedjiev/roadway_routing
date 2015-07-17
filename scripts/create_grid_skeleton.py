@@ -12,6 +12,13 @@ def main():
     num_args= 0
     parser = OptionParser(usage=usage)
 
+    parser.add_option('', '--center-x', dest='center_x', default=None,
+            help="Center the grid on x (longitude) coordinate", type=float)
+    parser.add_option('', '--center-y', dest='center_y', default=None,
+            help="Center the grid on y (latitude) coordinate", type=float)
+    parser.add_option('', '--grid_width', dest='grid_width', default=60,
+            help='How wide the grid is in degrees', type=float)
+
     parser.add_option('-r', '--resolution', dest='resolution', default=4, 
             help="The resolution we want the grid to be at", type='int')
     parser.add_option('-o', '--output-file', dest='output_file', default=None,
@@ -25,10 +32,25 @@ def main():
     parser.add_option('', '--max-y', dest='max_y', default=None,
             help='The maximum latitude', type='float')
 
+
     #parser.add_option('-o', '--options', dest='some_option', default='yo', help="Place holder for a real option", type='str')
     #parser.add_option('-u', '--useless', dest='uselesss', default=False, action='store_true', help='Another useless option')
 
     (options, args) = parser.parse_args()
+
+
+    if options.center_x is not None:
+        options.min_x = options.center_x - options.grid_width / 2;
+        options.max_x = options.center_x + options.grid_width / 2;
+
+    if options.center_y is not None:
+        options.min_y = options.center_y - options.grid_width / 2;
+        options.max_y = options.center_y + options.grid_width / 2;
+
+    if options.max_y > 90:
+        options.max_y = 90 
+    if options.min_y < -90:
+        options.min_y = 90
 
     xs = np.linspace(options.min_x, options.max_x, options.resolution)
     ys = np.linspace(options.min_y, options.max_y, options.resolution)
