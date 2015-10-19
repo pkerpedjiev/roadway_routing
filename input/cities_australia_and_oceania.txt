@@ -1,0 +1,13 @@
+Sydney, Australia
+Perth, Australia
+"Port Moresby", "Papua New Guinea"
+Adelaide, Australia
+Melbourne, Australia
+Hobart, Tasmania
+Brisbane, Australia
+Auckland, "New Zealand"
+Wellington, "New Zealand"
+Christchurch, "New Zealand"
+Noumea, "New Caledonia"
+Suva, Fiji
+

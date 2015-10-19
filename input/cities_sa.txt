@@ -1,0 +1,18 @@
+"Rio De Janeiro", Brazil
+Quito, Ecuador
+Santiago, Chile
+"Sao Paolo", Brazil
+Manaus, Brazil
+Caracas, Venezuela
+Cartagena, Colombia
+Bogota, Colombia
+Lima, Peru
+Brasilia, Brasil
+"Buenos Aires", Argentina
+Asuncion, Paraguay
+Montevideo, Uruguay
+Ushuaia, Argentina
+"La Paz", Bolivia
+Georgetown, Guyana
+Paramaribo, Suriname
+Cayenne, "French Guiana"

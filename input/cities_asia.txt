@@ -1,0 +1,62 @@
+"Phnom Penh", Cambodia
+Moscow, Russia
+"Abu Dhabi", UAE
+Dubai, UAE
+Riyadh, "Saudi Arabia"
+Ankara, Turkey
+Damascus, Syria
+"Tel Aviv", Israel
+Jerusalem, Israel
+Beirut, Lebanon
+Amman, Jordan
+Jeddah, "Saudi Arabia"
+Sanaa, Yemen
+Muscat, Oman
+Doha, Qatar
+Manama, Bahrain
+"Kuwait City", Kuwait
+Baghdad, Iraq
+Mosul, Iraq
+Tbilisi, Georgia
+Yerevan, Armenia
+Baku, Azerbaijan
+Sochi, Russia
+"St Petersburg", Russia
+Irkutsk, Russia
+Tehran, Iran
+Kabul, Afghanistan
+Karachi, Pakistan
+Islamabad, Pakistan
+Ashgabat, Turkmenistan
+Dushanbe, Tazikistan
+Tashkent, Uzbekistan
+Bishkek, Kyrgyzstan
+Almaty, Kazakhstan
+Astana, Kazakhstan
+Novosibirsk, Russia
+Irkutsk, Russia
+Ulaanbaatar, Mongolia
+Beijing, China
+Kathmandu, Nepal
+Llhasa, China
+Tianjin, China
+Pyongyang, "North Korea"
+Seoul, "South Korea"
+Shanghai, China
+"New Delhi", India
+Lahore, Pakistan
+Mumbai, India
+Colombo, "Sri Lanka"
+Dhaka, Bangledesh
+Thimphu, Bhutan
+Naypyidaw, Myanmar
+Tokyo, Japan
+Vladivostok, Russia
+Hanoi, Vietnam
+Vientiane, Laos
+Bangkok, Thailand
+Singapore, Singapore
+"Kuala Lampur", Singapore
+Jakarta, Indonesia
+Manila, Philippines
+
