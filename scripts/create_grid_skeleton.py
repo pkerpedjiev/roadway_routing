@@ -32,7 +32,6 @@ def main():
     parser.add_option('', '--max-y', dest='max_y', default=None,
             help='The maximum latitude', type='float')
 
-
     #parser.add_option('-o', '--options', dest='some_option', default='yo', help="Place holder for a real option", type='str')
     #parser.add_option('-u', '--useless', dest='uselesss', default=False, action='store_true', help='Another useless option')
 

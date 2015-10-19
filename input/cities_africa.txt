@@ -1,0 +1,50 @@
+Marrakesh, Morocco
+Rabat, Morocco
+Algiers, Algeria
+Cairo, Egypt
+Tunis, Tunisia
+Tripoli, Libya
+Khartoum, Sudan
+"N'Djamena",  Chad
+Niamey, Niger
+Lagos, Nigeria
+Nouakchott, Mauritania
+Laayoune, "Western Sahara"
+Dakar, Senegal
+Banjul, Gambia
+Bissau, Guinea-Bissau
+Conakry, Guinea
+Freetown, "Sierra Leone"
+Monrovia, Liberia
+Abidjan, "Ivory Coast"
+Accra, Ghana
+Lome, Togo
+"Porto Novo", Benin
+Yaounde, Cameroon
+Bata, "Equitoreal Guinea"
+Libreville, Gabon
+Kinshasa, "Democratic Republic of the Congo"
+Brazzaville, Congo
+Luanda, Angola
+Windhoek, Namibia
+Gaborone, Botswana
+"Cape Town", "South Africa"
+"Johannesburg", "South Africa"
+Maseru, Lesotho
+Mbabane, Swaziland
+Maputo, Mozambique
+Lilongwe, Malawi
+"Dar Es Salaam", Tanzania
+Antananarivo, Madagascar
+Lusaka, Zambia
+Bujumbura, Burundi
+Kigali, Rwanda
+Nairobi, Kenya
+Kampala, Uganda
+Juba, "South Sudan"
+Khartoum, Sudan
+"Addis Abbaba", Ethiopia
+Djibuoti, Djibouti
+Mogadishu, Somalia
+Asmara, Eritrea
+Banguli, "Central African Republic"
