@@ -35,10 +35,11 @@ layout: isochrone_driving_details
 title:  "Isochrone Map for Driving from {}"
 tags: maps javascript leaflet isochrone
 city: {} 
+real_city_name: {}
 latitude: {}
 longitude: {}
 ---
-""".format(real_city_name, city_name, latitude, longitude)
+""".format(real_city_name, city_name, real_city_name, latitude, longitude)
 
     template += """
 <script type="text/javascript">
