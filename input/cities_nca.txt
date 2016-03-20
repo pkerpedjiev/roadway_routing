@@ -1,0 +1,38 @@
+Juneau, Alaska
+Fairbanks, Alaska
+Yellowknife, Canada
+Edmonton, Canada
+Whitehorse, Canada
+Nome, Alaska
+Charlotte, NC
+Chicago, IL
+Dallas, TX
+Denver, CO
+Houston, TX
+"Los Angeles", CA
+Miami, FL
+"New York", NY
+Philadelphia, PA
+Phoenix, AZ
+"San Diego", CA
+"San Francisco", CA
+Seattle, WA
+Toronto, ON
+Vancouver, BC
+Ottawa, QC
+Montreal, QC
+Winnipeg, MB
+Miami, FL
+Pittsburgh, PA
+Atlanta, GA
+Lincoln, Nebraska
+Wichita, KS
+Minneapolis, MN
+"Mexico City", Mexico
+"Guatemala City", Guatemala
+Belmopan, Belize
+Tegucigalpa, Honduras
+"San Salvador", "El Salvador"
+Managua, Nicaragua
+"San Jose", "Costa Rica"
+"Panama City", Panama

@@ -29,6 +29,8 @@ def grid_to_contours(grid_json, levels):
 
     new_contours = []
 
+    print >>sys.stderr, "cs.collections:", cs.collections
+
     for i, collection in enumerate(cs.collections):
         for path in collection.get_paths():
             coords = path.vertices
