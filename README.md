@@ -41,6 +41,7 @@ ls geocodes_asia/ > cities_asia.txt
 resolution=600; for city in $(cat cities_sa.txt); do parallel -q --colsep ' ' python  scripts/create_grid_skeleton.py -r ${resolution} --center-x {3} --center-y {4} > grid_skeletons/grid_${city}_${resolution}.ssv :::: geocodes_sa/${city}; done;
 resolution=600; for city in $(cat cities_africa.txt); do parallel -q --colsep ' ' python  scripts/create_grid_skeleton.py -r ${resolution} --center-x {3} --center-y {4} > grid_skeletons/grid_${city}_${resolution}.ssv :::: geocodes_africa/${city}; done;
 resolution=600; for city in $(cat cities_asia.txt); do parallel -q --colsep ' ' python  scripts/create_grid_skeleton.py -r ${resolution} --center-x {3} --center-y {4} > grid_skeletons/grid_${city}_${resolution}.ssv :::: geocodes_asia/${city}; done;
+resolution=600; for city in $(cat cities_nca.txt); do parallel -q --colsep ' ' python  scripts/create_grid_skeleton.py -r ${resolution} --center-x {3} --center-y {4} > grid_skeletons/grid_${city}_${resolution}.ssv :::: geocodes_nca/${city}; done;
 
 #### Query the routing server
 
