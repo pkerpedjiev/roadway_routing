@@ -60,6 +60,12 @@ http://wiki.openstreetmap.org/wiki/OpenRouteService
 
 #### Query the routing server
 
+    Start graphopper:
+
+    ./graphhopper.sh web /scr/fluidspace/pkerp/data/maps/americas.pbf
+
+    Run the queries:
+
     resolution=600; for city in $(cat cities_sa.txt); do parallel -q --colsep ' ' node scripts/get_directions.js -c --output-dir directions_sa/${city} \"{3}\" \"{4}\" \"{5}\" \"{6}\" :::: geocodes_sa/${city} :::: grid_skeletons/grid_${city}_${resolution}.ssv; find directions_sa/${city} -name "*.json" | xargs -n 1 gzip; done;
     resolution=600; for city in $(cat cities_africa.txt); do parallel -q --colsep ' ' node scripts/get_directions.js -c --output-dir directions_africa/${city} \"{3}\" \"{4}\" \"{5}\" \"{6}\" :::: geocodes_africa/${city} :::: grid_skeletons/grid_${city}_${resolution}.ssv; find directions_africa/${city} -name "*.json" | xargs -n 1 gzip; done;
     resolution=600; for city in $(cat cities_asia.txt); do parallel -q --colsep ' ' node scripts/get_directions.js -c --output-dir directions_asia/${city} \"{3}\" \"{4}\" \"{5}\" \"{6}\" :::: geocodes_asia/${city} :::: grid_skeletons/grid_${city}_${resolution}.ssv; find directions_asia/${city} -name "*.json" | xargs -n 1 gzip; done;
