@@ -3,6 +3,8 @@ import json
 from optparse import OptionParser
 
 sys.path.append('..')
+sys.path.append('.')
+print >>sys.stderr, "sys.path", sys.path
 
 import plot_travel_times as ptt
 
