@@ -30,7 +30,7 @@ def main():
 
     parser.add_option('', '--walking-speed', dest='walking_speed', default=5,
             help='The speed with which one transports oneself from a train station \
-                  to somewhere else', type='float')
+                  to somewhere else (in minutes / km)', type='float')
 
     #parser.add_option('-u', '--useless', dest='uselesss', default=False, action='store_true', help='Another useless option')
 

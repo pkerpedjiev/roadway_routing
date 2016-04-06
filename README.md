@@ -76,7 +76,11 @@ parallel 'find directions_africa/{}/ -type f  > file_lists/file_list_{}.txt; pyt
 
 #### Create the grid
 
+
 ln -s ~/projects/oebb/scripts/create_grid.py scripts/
+
+method=time; walkspeed=5; resolution=300; parallel /usr/bin/time python scripts/create_grid.py all_connections/all_connections_{}.json --min-x -12.4 --max-x 46.3 --min-y 33.1 --max-y 74.5 -r ${resolution} --method ${method} --walking-speed ${walkspeed} {} '>' grids/grid_${method}_{}_${resolution}_${walkspeed}.json ::: birmingham london
+
 method=time; walkspeed=5; resolution=300; parallel /usr/bin/time python scripts/create_grid.py all_connections/all_connections_{}.json -r ${resolution} --method ${method} --walking-speed ${walkspeed} {} '>' grids/grid_${method}_{}_${resolution}_${walkspeed}.json ::: $(cat cities_africa.txt)
 
 method=time; walkspeed=5; resolution=300; parallel /usr/bin/time python scripts/create_grid.py all_connections/all_connections_{}.json -r ${resolution} --min-x -12.4 --max-x 46.3 --min-y 33.1 --max-y 74.5 --method ${method} --walking-speed ${walkspeed} {} '>' grids/grid_${method}_{}_${resolution}_${walkspeed}.json ::: $(cat ~/projects/oebb/cities.txt)
