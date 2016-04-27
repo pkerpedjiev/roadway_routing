@@ -1,8 +1,49 @@
-Vienna url:
+## Instructions
 
-http://openls.geog.uni-heidelberg.de/testing2015/route?Start=8.6817521,49.4173462&End=8.6828883,49.4067577&Via=&lang=de&distunit=KM&routepref=Fastest&avoidAreas=&useTMC=false&noMotorways=false&noTollways=false&instructions=false
+Enter the coordinates for the location that you want to start from into a file
+like this:
 
-http://wiki.openstreetmap.org/wiki/OpenRouteService
+geocodes_all/41.8210608_12.45805
+
+Such that its contents contain a line like this (longitude, latitude, space-separated):
+
+```
+somewhere Italy 12.45805 41.8210608
+```
+
+Using those coordinates, we need to create a grid:
+
+```
+city=41.8210608_12.45805
+resolution=600; parallel -q --colsep ' ' python  scripts/create_grid_skeleton.py -r ${resolution} --center-x {3} --center-y {4} > grid_skeletons/grid_${city}_${resolution}.ssv :::: geocodes_all/${city};
+```
+
+And then we need to start a graphhopper instance wherever it's installed.
+
+```
+./graphhopper.sh web /scr/fluidspace/pkerp/data/maps/americas.pbf
+```
+
+And then query the server for every grid point:
+
+```
+resolution=600; parallel -q --colsep ' ' node scripts/get_directions.js -c --output-dir directions_all/${city} \"{3}\" \"{4}\" \"{5}\" \"{6}\" :::: geocodes_all/${city} :::: grid_skeletons/grid_${city}_${resolution}.ssv; find directions_all/${city} -name "*.json" | xargs -n 1 gzip
+```
+
+All of these queries then need to be consolidated onto one large file:
+
+```
+parallel 'find directions_all/{}/ -type f  > file_lists/file_list_{}.txt; python scripts/parse_directions.py -l file_lists/file_list_{}.txt > all_connections/all_connections_{}.json' ::: $city
+```
+
+Create a grid and calculate the contours:
+
+```
+method=time; walkspeed=5; resolution=300; parallel /usr/bin/time python scripts/create_grid.py all_connections/all_connections_{}.json -r ${resolution} --method ${method} --walking-speed ${walkspeed} {} '>' grids/grid_${method}_{}_${resolution}_${walkspeed}.json ::: $city; parallel python scripts/grid_to_contours.py grids/grid_time_{}_${resolution}_${walkspeed}.json  '>' contours/{}_${walkspeed}.json ::: $city;
+```
+
+
+## Ignore everything below, it's just a reference
 
 cat input/cities.txt | xargs -n 2 -I {} python scripts/geocode.py -d geocodes "{}"
 cat input/cities_us.txt | xargs -n 2 -I {} python scripts/geocode.py -d geocodes_us "{}"
@@ -79,7 +120,9 @@ parallel 'find directions_africa/{}/ -type f  > file_lists/file_list_{}.txt; pyt
 
 ln -s ~/projects/oebb/scripts/create_grid.py scripts/
 
-method=time; walkspeed=5; resolution=300; parallel /usr/bin/time python scripts/create_grid.py all_connections/all_connections_{}.json --min-x -12.4 --max-x 46.3 --min-y 33.1 --max-y 74.5 -r ${resolution} --method ${method} --walking-speed ${walkspeed} {} '>' grids/grid_${method}_{}_${resolution}_${walkspeed}.json ::: birmingham london
+method=time; walkspeed=5; resolution=300; parallel /usr/bin/time python scripts/create_grid.py all_connections/all_connections_{}.json -r ${resolution} --method ${method} --walking-speed ${walkspeed} {} '>' grids/grid_${method}_{}_${resolution}_${walkspeed}.json ::: vienna; parallel python scripts/grid_to_contours.py grids/grid_time_{}_${resolution}_${walkspeed}.json  '>' contours/{}_${walkspeed}.json ::: vienna; cp contours/vienna_${walkspeed}.json ~/projects/emptypipes/jsons/isochrone_driving_contours/
+
+#method=time; walkspeed=5; resolution=300; parallel /usr/bin/time python scripts/create_grid.py all_connections/all_connections_{}.json --min-x -12.4 --max-x 46.3 --min-y 33.1 --max-y 74.5 -r ${resolution} --method ${method} --walking-speed ${walkspeed} {} '>' grids/grid_${method}_{}_${resolution}_${walkspeed}.json ::: birmingham london
 
 method=time; walkspeed=5; resolution=300; parallel /usr/bin/time python scripts/create_grid.py all_connections/all_connections_{}.json -r ${resolution} --method ${method} --walking-speed ${walkspeed} {} '>' grids/grid_${method}_{}_${resolution}_${walkspeed}.json ::: $(cat cities_africa.txt)
 
@@ -111,3 +154,18 @@ cp page_templates/* ~/projects/emptypipes/supp/isochrone_driving/
 python scripts/create_city_list_table.py $(cat cities_africa.txt) > ~/projects/emptypipes/_includes/africa_isochrone_driving_cities_list.html
 python scripts/create_city_list_table.py $(cat cities_sa.txt) > ~/projects/emptypipes/_includes/south_america_isochrone_driving_cities_list.html
 
+
+
+
+
+
+
+
+
+
+
+### Appendix
+
+#### Filter the connection data  to reduce its size
+
+cat all_connections/all_connections_vienna.json | python scripts/filter_jmes.py "$.data[@.to.coordinate.x<50.55]" - | python scripts/filter_jmes.py "$.data[@.to.coordinate.x>46.11]" - | python scripts/filter_jmes.py "$.data[@.to.coordinate.y>8.38]" - | python scripts/filter_jmes.py "$.data[@.to.coordinate.y<23.38]" - > all_connections/all_connections_vienna1.json
